@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>视频列表</title>
+<style>
+body { font-family: sans-serif; padding: 20px; }
+video { width: 100%; max-width: 720px; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<h2>视频列表（点击播放）</h2>
+<ul id="list"></ul>
+
+<video id="player" controls></video>
+
+<script>
+// 修改成你的 GitHub 用户名和仓库名
+const user = "你的GitHub用户名";
+const repo = "你的仓库名";
+
+async function loadVideos() {
+  const url = `https://api.github.com/repos/${user}/${repo}/contents`;
+
+  const res = await fetch(url);
+  const files = await res.json();
+
+  const list = document.getElementById("list");
+  const videos = files.filter(f => f.name.endsWith(".mp4"));
+
+  videos.forEach(v => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = "#";
+    a.textContent = v.name;
+    a.onclick = () => {
+      document.getElementById("player").src = v.download_url;
+    };
+    li.appendChild(a);
+    list.appendChild(li);
+  });
+}
+
+loadVideos();
+</script>
+
+</body>
+</html>
